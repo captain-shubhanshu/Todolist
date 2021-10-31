@@ -1,0 +1,46 @@
+<h1>{{ title }}</h1>
+<h2>Profile</h2>
+<p><b>Name:</b> {{user.firstname}} {{user.lastname}}</p>
+<p><b>Email Id:</b> {{user.email}}</p>
+<div>
+    <form action="/todolist" method="post">
+        <input type="text" name="task" id="task" placeholder="Enter the task">
+        <select name="status" id="status">
+            <option value="Todo">Todo</option>
+            <option value="In Progress">In Progress</option>
+            <option value="In Testing">In Testing</option>
+            <option value="Done">Done</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+<br>
+<table>
+    <thead>
+        <tr>
+            <th>Todo</th>
+            <th>In Progress</th>
+            <th>In Testing</th>
+            <th>Done</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each todolist as |todo|}}
+            {{#ifCond todo.status "Todo"}}
+                <tr><td>{{ todo.task }}</td><td></td><td></td><td></td></tr>
+            {{else}}
+                {{#ifCond todo.status "In Progress"}}
+                    <tr><td></td><td>{{ todo.task }}</td><td></td><td></td></tr>
+                {{else}}
+                    {{#ifCond todo.status "In Testing"}}
+                        <tr><td></td><td></td><td>{{ todo.task }}</td><td></td></tr>
+                    {{else}}
+                        <tr><td></td><td></td><td></td><td>{{ todo.task }}</td></tr>
+                    {{/ifCond}}
+                {{/ifCond}}
+            {{/ifCond}}
+        {{/each}}
+    </tbody>
+</table>
+<br>
+<a href="/logout">Logout</a>
