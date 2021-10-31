@@ -23,23 +23,53 @@ router.get('/', (req,res,next)=>{
 
 router.post('/', (req,res,next)=>{
     if(req.body.task && req.body.status) {
-        task_data = {
-            task: req.body.task,
-            status: req.body.status,
-            userId: req.session.userId
-        }
-        Todo.findOne({task: task_data['task'], userId: task_data['userId']}, (err, todo)=>{
+        Todo.findOne({task: req.body.task, userId: req.session.userId}, (err, todo)=>{
+            curr_date = new Date().toLocaleString()
             if(err) return next(err)
             else if(todo) {
-                Todo.updateOne({
-                    task: todo['task'],
-                    userId: todo['userId']
-                }, {status: task_data['status']}, (err, result)=>{
-                    if(err) return next(err)
-                    return res.redirect('/todolist')
-                })
+                if(req.body.status == todo['status']) {
+                    let err = new Error(`${req.body.task} is already in ${req.body.status} status.`)
+                    err.status = 401
+                    return next(err)
+                }
+                else if(req.body.status != 'Done'){
+                    if(todo['status']!='Done') {
+                        Todo.updateOne({
+                            task: todo['task'],
+                            userId: todo['userId']
+                        }, {status: req.body.status}, (err, result)=>{
+                            if(err) return next(err)
+                            return res.redirect('/todolist')
+                        })
+                    }
+                    else {
+                        Todo.updateOne({
+                            task: todo['task'],
+                            userId: todo['userId']
+                        }, {status: req.body.status, startDateTime: curr_date, endDateTime: ''}, (err, result)=>{
+                            if(err) return next(err)
+                            return res.redirect('/todolist')
+                        })
+                    }
+                }
+                else if(req.body.status == 'Done' && todo['status'] != 'Done') {
+                    Todo.updateOne({
+                        task: todo['task'],
+                        userId: todo['userId']
+                    }, {status: req.body.status, endDateTime: curr_date}, (err, result)=>{
+                        if(err) return next(err)
+                        return res.redirect('/todolist')
+                    })
+                }
             }
             else {
+                task_data = {
+                    task: req.body.task,
+                    status: req.body.status,
+                    startDateTime: curr_date,
+                    endDateTime: '',
+                    userId: req.session.userId
+                }
                 Todo.create(task_data, (err, task)=>{
                     if(err) return next(err)
                     return res.redirect('/todolist')

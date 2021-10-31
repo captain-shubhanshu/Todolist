@@ -10,6 +10,8 @@ const TodoSchema = new Schema({
         required: true,
         enum: ['Todo', 'In Progress', 'In Testing', 'Done']
     },
+    startDateTime: Date,
+    endDateTime: Date,
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User"

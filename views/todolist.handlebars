@@ -22,20 +22,22 @@
             <th>In Progress</th>
             <th>In Testing</th>
             <th>Done</th>
+            <th>Start DateTime</th>
+            <th>End DateTime</th>
         </tr>
     </thead>
     <tbody>
         {{#each todolist as |todo|}}
             {{#ifCond todo.status "Todo"}}
-                <tr><td>{{ todo.task }}</td><td></td><td></td><td></td></tr>
+                <tr><td>{{ todo.task }}</td><td></td><td></td><td></td><td>{{ todo.startDateTime }}</td><td>{{ todo.endDateTime }}</td></tr>
             {{else}}
                 {{#ifCond todo.status "In Progress"}}
-                    <tr><td></td><td>{{ todo.task }}</td><td></td><td></td></tr>
+                    <tr><td></td><td>{{ todo.task }}</td><td></td><td></td><td>{{ todo.startDateTime }}</td><td>{{ todo.endDateTime }}</td></tr>
                 {{else}}
                     {{#ifCond todo.status "In Testing"}}
-                        <tr><td></td><td></td><td>{{ todo.task }}</td><td></td></tr>
+                        <tr><td></td><td></td><td>{{ todo.task }}</td><td></td><td>{{ todo.startDateTime }}</td><td>{{ todo.endDateTime }}</td></tr>
                     {{else}}
-                        <tr><td></td><td></td><td></td><td>{{ todo.task }}</td></tr>
+                        <tr><td></td><td></td><td></td><td>{{ todo.task }}</td><td>{{ todo.startDateTime }}</td><td>{{ todo.endDateTime }}</td></tr>
                     {{/ifCond}}
                 {{/ifCond}}
             {{/ifCond}}
